@@ -277,8 +277,8 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 
 .curso {
-    color: #C7AA2B !important;
-    font-weight: 500;
+    color: #8b7202ff !important;
+    font-weight: 600;
 }
 
 .no-inscrito {
@@ -932,11 +932,25 @@ document.querySelectorAll('.navbar a').forEach(link => {
     <div class="hijos-grid">
         <?php
         // Consultar hijos del usuario
-        $query_hijos = "SELECT h.*, c.nombre_curso, i.id_curso, c.dia_hora
-               FROM hijos h 
-               LEFT JOIN inscripciones i ON h.id_hijo = i.id_hijo 
-               LEFT JOIN cursos c ON i.id_curso = c.id_curso 
-               WHERE h.id_usuario = $idUsuario";
+        $query_hijos = "
+          SELECT 
+              h.*, 
+              c.nombre_curso, 
+              c.grupo,
+              i.id_curso, 
+              c.dia_hora,
+              
+              -- Profesor del curso
+              p.id_profesor,
+              p.nombre AS nombre_profesor
+
+          FROM hijos h 
+          LEFT JOIN inscripciones i ON h.id_hijo = i.id_hijo 
+          LEFT JOIN cursos c ON i.id_curso = c.id_curso
+          LEFT JOIN profesores p ON c.id_profesor = p.id_profesor
+
+          WHERE h.id_usuario = $idUsuario
+      ";
         $result_hijos = mysqli_query($conexion, $query_hijos);
         
         if(mysqli_num_rows($result_hijos) > 0):
@@ -972,8 +986,13 @@ document.querySelectorAll('.navbar a').forEach(link => {
                 <h4 style="margin-top:0.5rem;">Matrícula: <?php echo htmlspecialchars($hijo['matricula']); ?></h4>
                 <p>Edad: <?php echo $hijo['edad']; ?> años</p>
                 <?php if($hijo['nombre_curso']): ?>
-                    <p class="curso">Curso: <?php echo htmlspecialchars($hijo['nombre_curso']); ?></p>
-                    <p class="curso">Horario: <?php echo htmlspecialchars($hijo['dia_hora']); ?></p>
+                    <p class="curso">Curso: <?= htmlspecialchars($hijo['nombre_curso']) ?> "<?= htmlspecialchars($hijo['grupo']) ?>" ID: <?= htmlspecialchars($hijo['id_curso']) ?></p>
+                    <p class="curso">Horario: <?= htmlspecialchars($hijo['dia_hora']) ?></p>
+                    <?php if ($hijo['id_profesor']): ?>
+                        <p class="curso">Profesor: <?= htmlspecialchars($hijo['nombre_profesor']) ?></p>
+                    <?php else: ?>
+                        <p class="curso no-inscrito">Profesor no asignado</p>
+                    <?php endif; ?>
                 <?php else: ?>
                     <p class="curso no-inscrito">Sin curso asignado</p>
                 <?php endif; ?>

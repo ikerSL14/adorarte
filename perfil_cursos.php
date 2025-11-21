@@ -1017,9 +1017,16 @@ document.querySelectorAll('.navbar a').forEach(link => {
     <?php
     // Consulta cursos con conteo de alumnos inscritos
     $query = "
-      SELECT c.*, COUNT(i.id_inscripcion) AS alumnos_inscritos
+      SELECT 
+        c.*, 
+        COUNT(i.id_inscripcion) AS alumnos_inscritos,
+        p.nombre AS nombre_profesor,
+        p.id_profesor
+
       FROM cursos c
       LEFT JOIN inscripciones i ON c.id_curso = i.id_curso
+      LEFT JOIN profesores p ON c.id_profesor = p.id_profesor
+
       GROUP BY c.id_curso
       ORDER BY c.nombre_curso ASC
     ";
@@ -1068,6 +1075,10 @@ document.querySelectorAll('.navbar a').forEach(link => {
           </h2>
         </div>
         <p class="precio">$<?php echo number_format($curso['precio'], 2); ?> MXN</p>
+        <p class="profesor" style="margin-top:0.5rem;">
+          <i class="fa-solid fa-chalkboard-user" style="margin-right:0.3rem;"></i> 
+          <?php echo !empty($curso['nombre_profesor']) ? htmlspecialchars($curso['nombre_profesor']) : "Profesor sin asignar"; ?>
+        </p>
       </div>
       <div class="curso-info-gris">
         <h3>Horarios:</h3>
