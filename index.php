@@ -1173,26 +1173,23 @@ window.addEventListener('click', (e) => {
     const data = await response.json();
 
     if (data.status === 'success') {
-      Swal.fire({
-        icon: 'success',
-        title: '¡Bienvenido!',
-        text: data.message,
-        timer: 1000,
-        showConfirmButton: false,
-        timerProgressBar: true,
-        didClose: () => {
-          // Verificamos el rol recibido del backend
-          if (data.rol === 'admin') {
-            // Redirige al panel de administrador
-            window.location.href = 'admin/dashboard.php';
-          } else {
-            // Recarga la página o redirige a la principal del usuario
-            window.location.reload();
-            // o: window.location.href = 'index.php';
-          }
-        }
-      });
-    } else {
+  Swal.fire({
+    icon: 'success',
+    title: '¡Bienvenido!',
+    text: data.message,
+    timer: 1000,
+    showConfirmButton: false,
+    timerProgressBar: true,
+    didClose: () => {
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      } else {
+        window.location.reload();
+      }
+    }
+  });
+}
+ else {
       Swal.fire({
         icon: 'error',
         title: 'Error',
