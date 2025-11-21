@@ -1,0 +1,82 @@
+	1.	#888C96 – Gris azulado
+	2.	#FFFFFF – Blanco
+	3.	#C7AA2B – Mostaza
+	4.	#F2DC63 – Amarillo claro
+	5.	#3C1E06 – Marrón oscuro
+	6.	#C4AE6E – Dorado apagado
+	7.	#D2D0C8 – Gris claro
+	8.	#FFFFFF – Blanco
+	9.	#888C96 – Gris azulado (repetido como el primero)
+
+Los cursos son
+Guitarra
+Canto
+Piano
+Batería
+Bajo
+500 pesos
+distintos horarios, sabados, 9-11, 11-2, 2-5...
+
+Escuela de Música Adorate
+Propuesta de diseño para el sitio web de la escuela de música para niños de 6 a 12 años.
+
+🎯 Objetivo del Sitio Web
+Crear una plataforma atractiva e interactiva donde los padres puedan conocer la escuela, sus programas, inscribir a sus hijos en clases y mantenerse informados sobre eventos y noticias.
+
+🔹 Estructura del Sitio Web
+Inicio
+
+Imagen de héroe con niños tocando instrumentos.
+Frase motivadora sobre el impacto de la música en el desarrollo infantil.
+Botón de “Inscríbete ahora”.
+
+Sobre Nosotros
+Historia de la escuela.
+Filosofía educativa y metodología de enseñanza.
+Fotos del equipo docente y del espacio físico.
+
+Servicios
+Clases de instrumentos (piano, guitarra, violín, batería, etc.).
+Talleres de canto y composición.
+Presentaciones y recitales.
+Cursos de teoría musical y apreciación musical.
+
+Blog
+Artículos sobre los beneficios de la música en niños.
+Consejos para padres sobre cómo apoyar el aprendizaje musical.
+Noticias y eventos próximos.
+Contacto
+Formulario de inscripción y consultas.
+Mapa interactivo con la ubicación de la escuela.
+Teléfono, correo y redes sociales.
+Redes Sociales (Facebook, X)
+
+Integración con publicaciones recientes.
+Enlaces directos en el footer.
+
+Diseño Visual
+Colores: Paleta de colores vivos y cálidos (naranja, azul cielo, verde, amarillo) que transmitan alegría y confianza.
+Tipografía: Elegante y moderna, con un toque amigable (ejemplo: Lato, Raleway o Poppins).
+Estilo: Profesional pero acogedor, con imágenes de niños felices en clases de música y familias compartiendo experiencias.
+Diseño limpio y organizado: Secciones bien definidas con botones llamativos para facilitar la navegación.
+
+Funcionalidades Técnicas
+Registro de usuarios: Para inscripción en clases y talleres.
+Formularios de contacto: Para consultas de padres.
+Integración con APIs: Puede incluir pasarela de pagos para inscripción en línea.
+E-commerce: Venta de clases, materiales o merchandising.
+
+Tecnologías a Utilizar
+Dreamweaver para estructuración.
+HTML5 y CSS3 para el diseño.
+JavaScript para animaciones interactivas.
+Bootstrap para asegurar un diseño responsive.
+[11:09 a.m., 23/5/2025] Sele 💓: 1.	#888C96 – Gris azulado
+	2.	#FFFFFF – Blanco
+	3.	#C7AA2B – Mostaza
+	4.	#F2DC63 – Amarillo claro
+	5.	#3C1E06 – Marrón oscuro
+	6.	#C4AE6E – Dorado apagado
+	7.	#D2D0C8 – Gris claro
+	8.	#FFFFFF – Blanco
+	9.	#888C96 – Gris azulado (repetido como el primero)
