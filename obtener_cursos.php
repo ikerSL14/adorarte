@@ -5,6 +5,7 @@ $query = "
   SELECT c.*, COUNT(i.id_inscripcion) AS alumnos_inscritos
   FROM cursos c
   LEFT JOIN inscripciones i ON c.id_curso = i.id_curso
+  WHERE c.estado = 'activo'
   GROUP BY c.id_curso
   ORDER BY c.nombre_curso ASC
 ";

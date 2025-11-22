@@ -368,6 +368,17 @@ $ultimosHijos = mysqli_query($conexion, "
   justify-content: flex-end;
   gap: 0.7rem;
 }
+.badge-terminado {
+    background-color: #1E90FF; /* azul */
+    color: white;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    border-radius: 8px;
+    display: inline-block;
+    font-weight: 600;
+    margin-bottom:0.4rem;
+}
+
 
 .btn-icon {
   background: transparent;
@@ -431,6 +442,17 @@ $ultimosHijos = mysqli_query($conexion, "
   position: relative;
   z-index: 2;
   text-align: center;
+}
+.badge-curso-terminado-detalle {
+  display: inline-block;
+  background: #1E90FF; /* rojo elegante */
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 20px;
+  font-weight: 600;
+  margin: 6px 0 10px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
 }
 
 .curso-info h2 {
@@ -511,6 +533,48 @@ $ultimosHijos = mysqli_query($conexion, "
 .alumno-info {
   flex: 1;
   margin-left: 1rem;
+}
+/* --- Extra de alumno: calificación y fecha --- */
+.alumno-extra {
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.7rem;
+  width: 40%;
+  background: #f7f7f7;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #444;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* Líneas dentro del extra */
+.alumno-extra p {
+  margin: 0.2rem 0;
+}
+
+/* --- Padre --- */
+.alumno-info .padre {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.alumno-info .padre i {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Calificación destacada */
+.calificacion strong {
+  color: #C7AA2B;
+}
+
+/* Finalizado */
+.fecha-fin {
+  color: #2a7d2a;
+  font-weight: 600;
 }
 
 .alumno-info .nombre {
@@ -989,6 +1053,16 @@ $ultimosHijos = mysqli_query($conexion, "
   margin-top: 0.8rem;
   font-size: 0.9rem;
   color: #555;
+}
+.badge-terminadoProfes {
+  background-color: #007bff;  /* azul */
+  color: white;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-left: 6px;
+  display: inline-block;
 }
 
 /* CONTENEDOR DE BOTONES */
@@ -1535,36 +1609,49 @@ $ultimosHijos = mysqli_query($conexion, "
             container.innerHTML = '<p>No hay cursos registrados.</p>';
             return;
             }
-
             data.forEach(curso => {
-  container.innerHTML += `
-    <div class="curso-card" data-id="${curso.id_curso}" 
-       data-nombre="${curso.nombre_curso}" 
-       data-precio="${curso.precio}" 
-       data-dia-hora="${curso.dia_hora}" 
-       data-grupo="${curso.grupo}" 
-       data-foto="${curso.foto || ''}"
-       data-id-profesor="${curso.id_profesor || ''}"
-        data-nombre-profesor="${curso.nombre_profesor || ''}">
-      <div class="curso-header">
-        <i class="fa-solid fa-music"></i>
-        <span class="curso-nombre">${curso.nombre_curso}</span>
-      </div>
-      <span class="curso-id">#${curso.id_curso}</span> <!-- 👈 movido aquí -->
-      <div class="curso-sub">
-        <span>Grupo ${curso.grupo}</span>
-        <span class="curso-alumnos"><i class="fa-solid fa-users"></i> ${curso.total_alumnos}</span>
-      </div>
-      <div class="curso-precio">$${curso.precio}</div>
-      <div class="curso-horario" style="font-weight: 600;">Profesor: ${curso.nombre_profesor || 'No asignado'}</div>
-      <div class="curso-horario">${curso.dia_hora}</div>
-      <div class="curso-actions">
-        <button class="btn-icon ver" title="Ver"><i class="fa-solid fa-eye"></i></button>
-        <button class="btn-icon editar" title="Editar"><i class="fa-solid fa-pen"></i></button>
-        <button class="btn-icon borrar" title="Borrar"><i class="fa-solid fa-trash"></i></button>
-      </div>
-    </div>
-  `;
+
+    // Normalizamos el estado
+    const estado = (curso.estado || "").trim().toLowerCase();
+    // BADGE
+    const badge = (estado === "terminado")
+        ? `<span class="badge-terminado">Terminado</span>`
+        : "";
+
+    container.innerHTML += `
+        <div class="curso-card" data-id="${curso.id_curso}" 
+            data-nombre="${curso.nombre_curso}" 
+            data-precio="${curso.precio}" 
+            data-dia-hora="${curso.dia_hora}" 
+            data-grupo="${curso.grupo}" 
+            data-foto="${curso.foto || ''}"
+            data-id-profesor="${curso.id_profesor || ''}"
+            data-nombre-profesor="${curso.nombre_profesor || ''}">
+            
+            <div class="curso-header">
+                <i class="fa-solid fa-music"></i>
+                <span class="curso-nombre">${curso.nombre_curso}</span>
+                ${badge}
+            </div>
+
+            <span class="curso-id">#${curso.id_curso}</span>
+
+            <div class="curso-sub">
+                <span>Grupo ${curso.grupo}</span>
+                <span class="curso-alumnos"><i class="fa-solid fa-users"></i> ${curso.total_alumnos}</span>
+            </div>
+
+            <div class="curso-precio">$${curso.precio}</div>
+            <div class="curso-horario" style="font-weight: 600;">Profesor: ${curso.nombre_profesor || 'No asignado'}</div>
+            <div class="curso-horario">${curso.dia_hora}</div>
+
+            <div class="curso-actions">
+                <button class="btn-icon ver" title="Ver"><i class="fa-solid fa-eye"></i></button>
+                <button class="btn-icon editar" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-icon borrar" title="Borrar"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `;
 });
 
        // Asignar eventos de clic a cada tarjeta o botón "ver"
@@ -1839,38 +1926,59 @@ function mostrarDetalleCurso(cursoId) {
         ? `../imgs/cursos/${curso.id_curso}/${curso.foto}`
         : "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870";
 
-      // Construir HTML de alumnos procesando la foto para cada uno
       const alumnosHtml = alumnos.length > 0
-        ? alumnos.map(a => {
-            // Nombre a mostrar
-            const nombreAlumno = a.nombre || a.nombre_completo || 'Alumno';
+  ? alumnos.map(a => {
 
-            // Foto: si a.foto existe y no es cadena vacía, usar ruta local, si no usar placeholder
-            const foto = a.foto && a.foto.trim() !== ""
-              ? `../imgs/perfil/${a.id_usuario}/hijos/${a.id_hijo}/${a.foto}`
-              : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png";
+      const nombreAlumno = a.nombre || "Alumno";
 
-            // Edad (fallback)
-            const edad = (typeof a.edad !== 'undefined' && a.edad !== null) ? a.edad : 'N/D';
+      const foto = a.foto && a.foto.trim() !== ""
+        ? `../imgs/perfil/${a.id_usuario}/hijos/${a.id_hijo}/${a.foto}`
+        : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png";
 
-            // Genero
-            const iconGenero = a.genero === 'F' ? 'venus' : 'mars';
+      const edad = a.edad ?? "N/D";
+      const iconGenero = a.genero === "F" ? "venus" : "mars";
+      const nombrePadre = a.nombre_padre || "Padre no registrado";
 
-            return `
-              <div class="alumno-item">
-                <img src="${foto}" class="alumno-foto" alt="Foto de ${escapeHtml(nombreAlumno)}">
-                <div class="alumno-info">
-                  <p class="nombre">${escapeHtml(nombreAlumno)}</p>
-                </div>
-                <div class="alumno-detalles">
-                  <span>${escapeHtml(String(edad))} años</span>
-                  <i class="fa-solid fa-${iconGenero}"></i>
-                </div>
-              </div>
-            `;
-          }).join('')
-        : '<p class="sin-alumnos">No hay alumnos inscritos en este curso.</p>';
+      const extra =
+        (a.calificacion || a.fecha_terminacion)
+          ? `
+            <div class="alumno-extra">
+              ${a.calificacion ? `<p class="calificacion">Calificación: <strong>${escapeHtml(a.calificacion)}</strong></p>` : ""}
+              ${a.fecha_terminacion ? `<p class="fecha-fin">Finalizado: ${escapeHtml(a.fecha_terminacion)}</p>` : ""}
+            </div>
+          `
+          : "";
 
+      return `
+        <div class="alumno-item">
+          <img src="${foto}" class="alumno-foto" alt="Foto de ${escapeHtml(nombreAlumno)}">
+
+          <div class="alumno-info">
+            <p class="nombre">${escapeHtml(nombreAlumno)}</p>
+
+            <p class="padre">
+              <i class="fa-solid fa-user"></i>
+              Tutor: 
+              <strong>${escapeHtml(nombrePadre)}</strong>
+            </p>
+
+            ${extra}
+          </div>
+
+          <div class="alumno-detalles">
+            <span>${escapeHtml(String(edad))} años</span>
+            <i class="fa-solid fa-${iconGenero}"></i>
+          </div>
+        </div>
+      `;
+    }).join('')
+  : '<p class="sin-alumnos">No hay alumnos inscritos en este curso.</p>';
+
+
+        // Badge de estado
+        const badgeEstado = curso.estado === "terminado"
+          ? `<span class="badge-curso-terminado-detalle">Terminado</span><br>`
+          : "";
       // Insertar todo en el DOM
       contentArea.innerHTML = `
         <section class="curso-detalle">
@@ -1885,6 +1993,7 @@ function mostrarDetalleCurso(cursoId) {
           <!-- Información principal -->
           <div class="curso-info">
             <h2>${escapeHtml(curso.nombre_curso || 'Curso')}</h2>
+            ${badgeEstado}
             <p class="grupo">Grupo ${escapeHtml(curso.grupo || '')}</p>
             <p class="precio">$${escapeHtml(String(curso.precio || '0'))}</p>
             <p class="horario">${escapeHtml(curso.dia_hora || '')}</p>
@@ -2151,7 +2260,8 @@ function cargarProfesores() {
           data-foto="${p.foto || ''}"
           data-id-curso="${p.id_curso || ''}"
           data-nombre-curso="${p.nombre_curso || ''}"
-          data-grupo="${p.grupo || ''}">
+          data-grupo="${p.grupo || ''}"
+          data-estado="${p.estado || 'activo'}">
 
           <div class="prof-top">
             <img src="${foto}" class="prof-foto">
@@ -2175,6 +2285,7 @@ function cargarProfesores() {
                   <div class="curso-detalles">
                     <span class="badge-grupo">Grupo: ${p.grupo}</span>
                     <span class="badge-id">ID: ${p.id_curso}</span>
+                    ${p.estado === "terminado" ? `<span class="badge-terminadoProfes">Terminado</span>` : ""}
                   </div>
                 </div>
               `

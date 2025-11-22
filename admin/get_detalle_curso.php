@@ -30,20 +30,48 @@ if (!$cursoQuery || mysqli_num_rows($cursoQuery) == 0) {
 $curso = mysqli_fetch_assoc($cursoQuery);
 
 // ==============================
-// 👦 Obtener alumnos inscritos
+// 👦 Obtener alumnos dependiendo del estado
 // ==============================
-$alumnosQuery = mysqli_query($conexion, "
-  SELECT 
-    h.id_hijo,
-    h.id_usuario,
-    h.nombre_completo AS nombre,
-    h.foto_perfil AS foto,
-    h.edad,
-    h.genero
-  FROM inscripciones i
-  INNER JOIN hijos h ON h.id_hijo = i.id_hijo
-  WHERE i.id_curso = $id
-");
+
+if ($curso['estado'] === 'terminado') {
+
+  // Alumnos desde HISTORIAL
+  $alumnosQuery = mysqli_query($conexion, "
+    SELECT 
+      h.id_hijo,
+      hi.id_usuario,
+      hi.nombre_completo AS nombre,
+      hi.foto_perfil AS foto,
+      hi.edad,
+      hi.genero,
+      h.calificacion,
+      h.fecha_terminacion,
+      u.nombre_com AS nombre_padre
+    FROM historial h
+    INNER JOIN hijos hi ON hi.id_hijo = h.id_hijo
+    INNER JOIN usuarios u ON u.id_usuario = hi.id_usuario
+    WHERE h.id_curso = $id
+  ");
+
+} else {
+
+  // Alumnos desde INSCRIPCIONES
+  $alumnosQuery = mysqli_query($conexion, "
+    SELECT 
+      h.id_hijo,
+      h.id_usuario,
+      h.nombre_completo AS nombre,
+      h.foto_perfil AS foto,
+      h.edad,
+      h.genero,
+      u.nombre_com AS nombre_padre
+    FROM inscripciones i
+    INNER JOIN hijos h ON h.id_hijo = i.id_hijo
+    INNER JOIN usuarios u ON u.id_usuario = h.id_usuario
+    WHERE i.id_curso = $id
+  ");
+
+}
 
 $alumnos = [];
 if ($alumnosQuery) {
@@ -56,3 +84,4 @@ echo json_encode([
   'curso' => $curso,
   'alumnos' => $alumnos
 ], JSON_UNESCAPED_UNICODE);
+?>

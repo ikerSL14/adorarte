@@ -14,7 +14,8 @@ $sql = "
 
         c.id_curso,
         c.nombre_curso,
-        c.grupo
+        c.grupo,
+        COALESCE(c.estado, 'activo') AS estado   -- << AÑADIR ESTADO DEL CURSO
 
     FROM profesores p
     LEFT JOIN cursos c ON p.id_profesor = c.id_profesor

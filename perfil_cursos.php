@@ -1027,6 +1027,8 @@ document.querySelectorAll('.navbar a').forEach(link => {
       LEFT JOIN inscripciones i ON c.id_curso = i.id_curso
       LEFT JOIN profesores p ON c.id_profesor = p.id_profesor
 
+      WHERE c.estado = 'activo'
+
       GROUP BY c.id_curso
       ORDER BY c.nombre_curso ASC
     ";

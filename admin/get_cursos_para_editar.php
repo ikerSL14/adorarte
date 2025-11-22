@@ -11,8 +11,12 @@ $sql = "
         COALESCE(NULLIF(c.grupo, ''), 'A') AS grupo,
         c.id_profesor
     FROM cursos c
-    WHERE c.id_profesor IS NULL 
-       OR c.id_profesor = 0
+    WHERE 
+        (
+            c.id_profesor IS NULL 
+            OR c.id_profesor = 0
+        )
+        AND c.estado = 'activo'
        OR c.id_profesor = $id_profesor
     ORDER BY c.nombre_curso ASC
 ";

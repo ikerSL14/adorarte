@@ -1,7 +1,18 @@
 <?php
 include '../conexion_be.php';
 
-$result = $conexion->query("SELECT id_profesor, nombre FROM profesores");
+$sql = "
+    SELECT p.id_profesor, p.nombre
+    FROM profesores p
+    WHERE p.id_profesor NOT IN (
+        SELECT id_profesor 
+        FROM cursos 
+        WHERE id_profesor IS NOT NULL AND id_profesor <> 0
+    )
+    ORDER BY p.nombre ASC
+";
+
+$result = $conexion->query($sql);
 
 $profesores = [];
 

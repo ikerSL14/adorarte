@@ -182,6 +182,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     flex-direction: column;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow: hidden;
+    cursor: pointer;
     transition: transform 0.3s ease;
 }
 
@@ -716,6 +717,56 @@ html{
 .curso-lleno input[type="radio"] {
   cursor: not-allowed;
 }
+/* ===============================
+   🎓 HISTORIAL DEL HIJO
+   =============================== */
+
+.historial-modal {
+  max-width: 600px;
+}
+
+/* Lista contenedora */
+.historial-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+/* Cada curso del historial */
+.historial-item {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+/* Info interna */
+.historial-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #3C1E06;
+  font-weight: 700;
+}
+
+.historial-info p {
+  margin: 0.2rem 0;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.historial-info strong {
+  color: #000;
+}
+
+/* Si no tiene historial */
+.historial-vacio {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+  padding: 1rem 0;
+}
+
     </style>
     
 </head>
@@ -886,12 +937,13 @@ document.querySelectorAll('.navbar a').forEach(link => {
           <?php
           // Consulta cursos para listar
           $query_cursos = "
-          SELECT c.*, COUNT(i.id_inscripcion) AS alumnos_inscritos
-          FROM cursos c
-          LEFT JOIN inscripciones i ON c.id_curso = i.id_curso
-          GROUP BY c.id_curso
-          ORDER BY c.nombre_curso ASC
-        ";
+            SELECT c.*, COUNT(i.id_inscripcion) AS alumnos_inscritos
+            FROM cursos c
+            LEFT JOIN inscripciones i ON c.id_curso = i.id_curso
+            WHERE c.estado = 'activo'
+            GROUP BY c.id_curso
+            ORDER BY c.nombre_curso ASC
+          ";
         $result_cursos = mysqli_query($conexion, $query_cursos);
 
         while($curso = mysqli_fetch_assoc($result_cursos)):
@@ -1003,6 +1055,20 @@ document.querySelectorAll('.navbar a').forEach(link => {
         endif;
         ?>
     </div>
+    
+    <!-- Modal Historial de Cursos -->
+    <div id="modalHistorial" class="modal hidden">
+    <div class="modal-content historial-modal" style="margin-top:0rem !important;">
+        <span class="close-modal" id="cerrarHistorial">&times;</span>
+
+        <h2 id="historialNombre"></h2>
+
+        <div id="historialContenido" class="historial-lista">
+            <!-- Aquí se cargan los cursos del historial -->
+        </div>
+    </div>
+</div>
+
     <!-- Modal Editar Hijo -->
 <div id="modalEditarHijo" class="modal hidden">
   <div class="modal-content">
@@ -1148,7 +1214,8 @@ document.getElementById('editarImagenHijo').addEventListener('change', function(
         }
     }
 });
-        const btnAgregarHijo = document.getElementById('agregarHijo');
+
+const btnAgregarHijo = document.getElementById('agregarHijo');
 const modalAgregarHijo = document.getElementById('modalAgregarHijo');
 const closeModalBtn = modalAgregarHijo.querySelector('.close-modal');
 
@@ -1262,6 +1329,66 @@ document.querySelectorAll('.compra-resumen').forEach(resumen => {
       }
     }
   });
+});
+// ===============================
+// 📚 Modal historial de cursos del hijo
+// ===============================
+
+// Abrir modal al hacer click en la card (pero NO en botones internos)
+document.querySelectorAll('.hijo-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+        // Evitar abrir si se hizo click en botones
+        if (e.target.closest('.btn-editar-hijo') ||
+            e.target.closest('.btn-borrar-hijo') ||
+            e.target.closest('.btn-reinscribir-hijo')) {
+            return;
+        }
+
+        const idHijo = this.dataset.id;
+        const nombre = this.querySelector('h3').textContent;
+
+        document.getElementById("historialNombre").textContent = nombre;
+
+        // Limpiar contenido
+        const cont = document.getElementById("historialContenido");
+        cont.innerHTML = "<p>Cargando...</p>";
+
+        // Cargar historial
+        fetch(`get_historial_hijo.php?id=${idHijo}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length === 0) {
+                    cont.innerHTML = `<p class="historial-vacio">Sin cursos anteriores</p>`;
+                    return;
+                }
+
+                cont.innerHTML = data.map(item => `
+                    <div class="historial-item">
+                        <div class="historial-info">
+                            <h4>${item.nombre_curso} "<span>${item.grupo}</span>"</h4>
+                            <p>ID Curso: <strong>${item.id_curso}</strong></p>
+                            <p>Calificación: <strong>${item.calificacion ?? "N/D"}</strong></p>
+                            <p>Finalizado: ${item.fecha_terminacion}</p>
+                        </div>
+                    </div>
+                `).join('');
+            });
+
+        // Mostrar modal
+        document.getElementById("modalHistorial").classList.remove("hidden");
+    });
+});
+
+// Cerrar modal
+document.getElementById("cerrarHistorial").addEventListener("click", () => {
+    document.getElementById("modalHistorial").classList.add("hidden");
+});
+
+// Cerrar clic afuera
+document.getElementById("modalHistorial").addEventListener("click", (e) => {
+    if (e.target.id === "modalHistorial") {
+        e.target.classList.add("hidden");
+    }
 });
 
 document.getElementById('formEditarPerfil').addEventListener('submit', async function(e) {

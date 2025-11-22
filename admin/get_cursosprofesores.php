@@ -1,10 +1,11 @@
 <?php
 include '../conexion_be.php';
 
-// solo cursos sin profesor asignado
+// Solo cursos sin profesor y que estén activos
 $sql = "SELECT id_curso, nombre_curso, grupo 
         FROM cursos 
-        WHERE id_profesor IS NULL OR id_profesor = 0";
+        WHERE (id_profesor IS NULL OR id_profesor = 0)
+        AND estado = 'activo'";
 
 $result = $conexion->query($sql);
 
